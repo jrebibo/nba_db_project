@@ -2,7 +2,20 @@
 <html> 
 <body>
 <h1> Welcome to nbaDashboard! Click a button below to find information</h1>
+<li><a href="{% url 'team_information' %}">Team Information </a></li>
 <li><a href="{% url 'team_names' %}">Team Names </a></li>
 <li><a href="{% url 'team_abbreviations' %}">Team Abbreviations </a></li>
+<li><a href="{% url 'team_locations' %}">Team Locations </a></li>
+<h2> View a Team's Roster</h2>
+<form method="post" action="view_roster"> 
+    <select name="roster">
+        <option selected="selected" disabled>Select a team:</option>
+        {% for value in team_info %}
+            <option value="{{ value.2 }}">{{ value.1 }} {{ value.0 }} </option>
+            <!-- <input type="hidden" name="team" value="{{ value.2 }}" /> -->
+        {% endfor %}
+    </select>
+    <input type="submit" value="View Roster" />
+</form>
 </body>
 </html>

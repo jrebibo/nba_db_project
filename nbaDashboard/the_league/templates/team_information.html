@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html> 
+<body>
+
+<table style="text-align: center">
+    <tr>
+        <th>Team Name</th>
+        <th>Location</th> 
+        <th>Abbreviation</th>
+    </tr>
+    {% for value in team_info %}
+    <tr>
+        <td> {{ value.0 }} </td>
+        <td> {{ value.1 }} </td>
+        <td> {{ value.2 }} </td>
+    </tr>
+    {% endfor %}
+    </table>
+</body>
+</html>
