@@ -1,18 +1,56 @@
 <!DOCTYPE html>
 <html> 
 <body>
-
+<h1> {{ team }} coached by {{ team_coach }} </h1>
+<h2> {{ team }} Roster </h2>
 <table style="text-align: center">
     <tr>
-        <th>Team Name</th>
-        <th>Location</th> 
-        <th>Abbreviation</th>
+        <th>Player Name</th>
+        <th>Position</th> 
+        <th>Height</th>
+        <th>Weight</th>
     </tr>
-    {% for value in team_info %}
+    {% for value in team_roster %}
     <tr>
         <td> {{ value.0 }} </td>
         <td> {{ value.1 }} </td>
         <td> {{ value.2 }} </td>
+        <td> {{ value.3 }} </td>
+    </tr>
+    {% endfor %}
+    </table>
+
+<h2> {{ team }} Stats </h2>
+<table style="text-align: center">
+    <tr>
+        <th>Player Name</th>
+        <th>Points per Game</th> 
+        <th>Rebounds per Game</th>
+        <th>Assists per Game</th>
+    </tr>
+    {% for value in team_stats %}
+    <tr>
+        <td> {{ value.0 }} </td>
+        <td> {{ value.1 }} </td>
+        <td> {{ value.2 }} </td>
+        <td> {{ value.3 }} </td>
+    </tr>
+    {% endfor %}
+    </table>
+<h2> {{ team }} Schedule </h2>
+<table style="text-align: center">
+    <tr>
+        <th>Visiting Team</th>
+        <th>Visiting Points</th> 
+        <th>Home Team</th>
+        <th>Home Points</th>
+    </tr>
+    {% for value in team_schedule %}
+    <tr>
+        <td> {{ value.0 }} </td>
+        <td> {{ value.1 }} </td>
+        <td> {{ value.2 }} </td>
+        <td> {{ value.3 }} </td>
     </tr>
     {% endfor %}
     </table>

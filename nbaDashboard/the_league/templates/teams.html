@@ -4,17 +4,15 @@
 
 <table style="text-align: center">
     <tr>
-        <th>Player Name</th>
-        <th>Position</th> 
-        <th>Height</th>
-        <th>Weight</th>
+        <th>Team Name</th>
+        <th>Location</th> 
+        <th>Abbreviation</th>
     </tr>
-    {% for value in team_roster %}
+    {% for value in team_info %}
     <tr>
         <td> {{ value.0 }} </td>
         <td> {{ value.1 }} </td>
         <td> {{ value.2 }} </td>
-        <td> {{ value.3 }} </td>
     </tr>
     {% endfor %}
     </table>

@@ -24,7 +24,7 @@ def get_team_info(request):
     context = {
         "team_info": teams,
     }
-    return render(request, 'team_information.html', context)
+    return render(request, 'teams.html', context)
 
 def get_team_names(request):
     cursor = connection.cursor()
@@ -67,15 +67,56 @@ def get_team_location(request):
     return render(request, 'team_locations.html', context)
 
 @csrf_exempt
-def view_roster(request):
-    print(request.POST.get('roster'))
-    team_abbrev = request.POST.get('roster')
+def view_team_information(request):
+    # Connect to DB & Get the requested team_abbreviation from index.html template
     cursor = connection.cursor()
+    team_abbrev = request.POST.get('team_abbreviation')
+
+    # Gets location and name of team
+    sql_command = "SELECT Location, Name FROM Teams WHERE Abbreviation = "
+    sql_command+= "'" + team_abbrev + "'"
+    cursor.execute(sql_command)
+    team_location_and_name = cursor.fetchall()
+    print(team_location_and_name)
+    team = team_location_and_name[0][0] + " " + team_location_and_name[0][1]
+
+    # Gets team roster
     sql_command = "SELECT Player, Pos, Ht, Wt FROM Teams NATURAL JOIN Players NATURAL JOIN Plays_For WHERE Abbreviation = "
     sql_command+= "'" + team_abbrev + "'"
-    print(sql_command)
     cursor.execute(sql_command)
+    team_roster = cursor.fetchall()
+
+    # Gets team stats, this SQL command isn't completely correct. Double check this and change it. Don't know why it gets multiple
+    sql_command = "SELECT Player, PPG, RPG, APG FROM Teams NATURAL JOIN Players NATURAL JOIN Plays_For NATURAL JOIN Stats WHERE Abbreviation = "
+    sql_command+= "'" + team_abbrev + "'"
+    cursor.execute(sql_command)
+    team_stats = cursor.fetchall()
+
+    # Gets team schedule
+    sql_command = "SELECT Visitor, Visitor_PTS, Home, Home_PTS FROM Schedule WHERE Visitor = "
+    sql_command+= "'" + team + "'" + " OR Home = " + "'" + team + "'"
+    cursor.execute(sql_command)
+    team_schedule = cursor.fetchall()
+
+    # Gets head coach of team
+    sql_command = "SELECT Coach_Name From Head_Coaches WHERE Abbreviation = "
+    sql_command += "'" + team_abbrev + "'"
+    cursor.execute(sql_command)
+    # Index twice because it is given in a tuple
+    team_coach = cursor.fetchall()[0][0]
+
+    # Pass information into team_information html template
     context = {
-        "team_roster": cursor.fetchall()
+        "team_roster": team_roster, 
+        "team_stats": team_stats,
+        "team_schedule": team_schedule,
+        "team": team,
+        "team_coach": team_coach,
     }
-    return render(request, 'team_roster.html', context) 
+    return render(request, 'team_information.html', context) 
+
+def add_information(request):
+    pass
+
+def add_player(request):
+    pass

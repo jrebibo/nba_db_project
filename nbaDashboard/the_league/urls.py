@@ -11,7 +11,8 @@ urlpatterns = [
     path('team_name', views.get_team_names, name="team_names"),
     path('team_abbreviations', views.get_team_abbreviations, name="team_abbreviations"),
     path('team_location', views.get_team_location, name="team_locations"),
-    path('view_roster', views.view_roster, name="view_roster"),
-
+    path('view_team', views.view_team_information, name="view_team"),
+    path('add', views.add_information, name="add"),
+    path('add_player', views.add_player, name="add_player"),
 
 ]
