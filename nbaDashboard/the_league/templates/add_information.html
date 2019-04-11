@@ -3,15 +3,29 @@
 <body>
 <h1> Add Information </h1>
 <h2> Add a Player </h2>
-<form method="post" action="add_player"> 
+<form method="post" enctype="multipart/form-data" action="add_player">
+    {% for field in add_player_form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    <button type="submit">Create</button>
+  </form>
+<!-- <form method="post" action="add_player"> 
     <select name="player_information">
         <option selected="selected" disabled>Select a team:</option>
         {% for value in team_info %}
             <option value="{{ value.2 }}">{{ value.1 }} {{ value.0 }} </option>
-            <!-- <input type="hidden" name="team" value="{{ value.2 }}" /> -->
         {% endfor %}
     </select>
     <input type="submit" value="View Information" />
-</form>
+</form> -->
 </body>
 </html>

@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.db import connection
 from django.views.decorators.csrf import csrf_exempt
+from .forms import *
 # Create your views here.
 
 def index(request):
@@ -116,7 +117,35 @@ def view_team_information(request):
     return render(request, 'team_information.html', context) 
 
 def add_information(request):
-    pass
+    form = AddPlayerForm()
+    context = {
+        "add_player_form": form
+    }
+    return render(request, 'add_information.html', context)
 
+@csrf_exempt
 def add_player(request):
-    pass
+    if request.method == 'POST':
+        # Gets form object to render in template view
+        form = AddPlayerForm(request.POST)
+        if form.is_valid():
+            # Gets field from form
+            number = form.cleaned_data['number']
+            player = form.cleaned_data['player']
+            position = form.cleaned_data['position']
+            height = form.cleaned_data['height']
+            weight = form.cleaned_data['weight']
+
+            # Run command to insert into database
+            sql_command = "INSERT INTO Players (No, Player, Pos, Ht, Wt) VALUES ('"
+            sql_command += str(number) + "', '" + player + "', '" + position + "', '" + height + "', '" + str(weight) + "')"
+            print("Command", sql_command)
+            cursor = connection.cursor()
+            cursor.execute(sql_command)
+            response = cursor.fetchall()
+            print("Response", response)
+            print("Player", player)
+            print("Position", position)
+
+            return redirect("home")
+    return HttpResponse(request)
