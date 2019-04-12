@@ -16,7 +16,7 @@ def index(request):
     context = {
         "team_info": teams
     }
-    return render(request, 'index.html', context)
+    return render(request, 'index2.html', context)
 
 def get_team_info(request):
     cursor = connection.cursor()
@@ -123,6 +123,10 @@ def add_information(request):
     }
     return render(request, 'add_information.html', context)
 
+
+def base_template(request):
+    return render(request, 'base_template.html')
+
 @csrf_exempt
 def add_player(request):
     if request.method == 'POST':
@@ -149,3 +153,5 @@ def add_player(request):
 
             return redirect("home")
     return HttpResponse(request)
+
+
