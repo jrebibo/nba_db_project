@@ -154,4 +154,76 @@ def add_player(request):
             return redirect("home")
     return HttpResponse(request)
 
+def team(request, team_abbr):
+    cursor = connection.cursor()
+    
+    sql_command = "SELECT * FROM Plays_For NATURAL JOIN Players WHERE Abbreviation="
+    sql_command += "'" + team_abbr + "'"
+    cursor.execute(sql_command)
+    response = cursor.fetchall()
 
+    roster = []
+
+    for r in response:
+        roster.append(r)
+
+
+    print(roster)
+
+    sql_command = "SELECT Location FROM Teams WHERE Abbreviation="
+    sql_command += "'" + team_abbr + "'"
+    cursor.execute(sql_command)
+    location = cursor.fetchall()[0][0]
+
+    print(location)
+
+    sql_command = "SELECT Name FROM Teams WHERE Abbreviation="
+    sql_command += "'" + team_abbr + "'"
+    cursor.execute(sql_command)
+    name = cursor.fetchall()[0][0]
+
+    print(name)
+
+    context = {
+        "roster": roster,
+        "location": location,
+        "name": name
+    }
+
+
+    return render(request,'team.html', context = context)
+
+@csrf_exempt
+def team_dashboard(request):
+    if request.method == "GET":
+        cursor = connection.cursor()
+        sql_command = "SELECT * From Teams"
+        cursor.execute(sql_command)
+        response = cursor.fetchall()
+
+        teams = []
+        for r in response:
+            temp = r[1] + " " + r[0] + " (" + r[2] + ")"
+            teams.append(temp)
+    
+        # print(teams)
+
+        context = {
+            "teams": teams
+        }
+
+        return render(request, 'team_dashboard.html', context = context)
+    else:
+        team = request.POST['team_selection']
+
+        open_parenthesis = team.find('(')
+        close_parenthesis = team.find(')')
+        abbr = team[open_parenthesis+1:close_parenthesis]
+        
+        return redirect('team', abbr)
+
+def player_dashboard(request):
+    return render(request, 'player_dashboard.html')
+
+def player(request, player_id):
+    return redirect('team')

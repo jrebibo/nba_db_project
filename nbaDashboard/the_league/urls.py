@@ -14,6 +14,10 @@ urlpatterns = [
     path('view_team', views.view_team_information, name="view_team"),
     path('add', views.add_information, name="add"),
     path('add_player', views.add_player, name="add_player"),
-    path('base_template', views.base_template, name = 'base_template')
+    path('base_template', views.base_template, name = 'base_template'),
+    path('team_dashboard', views.team_dashboard, name = 'team_dashboard'),
+    path('player_dashboard', views.player_dashboard, name = 'player_dashboard'),
+    path('team/<str:team_abbr>', views.team, name = 'team'),
+    path('player/<int:player_id>', views.player, name ='player')
 
 ]

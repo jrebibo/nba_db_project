@@ -1,0 +1,32 @@
+{% extends 'base_template.html' %}
+{% block body %}
+<div class = pagetitle>
+    {{ location }} {{ name }}
+</div>
+<div class = context>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Position</th>
+            <th scope="col">Height</th>
+            <th scope="col">Weight</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for player in roster %}
+            <a href = "{% url 'player' player.0 %}">
+          <tr>
+            <td> {{ player.2 }} </td>
+            <td> {{ player.3 }} </td>
+            <td> {{ player.4 }} </td>
+            <td> {{ player.5 }} </td>
+            <td> {{ player.6 }} </td>
+          </tr>
+          </a>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+{% endblock %}
