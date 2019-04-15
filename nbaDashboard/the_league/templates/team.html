@@ -1,4 +1,16 @@
 {% extends 'base_template.html' %}
+
+
+{% block head %}
+  <style>
+  .clickable-row :hover {
+    cursor: pointer;
+  }
+  
+  </style>
+{% endblock %}
+
+
 {% block body %}
 <div class = pagetitle>
     {{ location }} {{ name }}
@@ -16,17 +28,25 @@
         </thead>
         <tbody>
             {% for player in roster %}
-            <a href = "{% url 'player' player.0 %}">
-          <tr>
+          <tr class = 'clickable-row' data-href ="{% url 'player' player.0 %}">
             <td> {{ player.2 }} </td>
             <td> {{ player.3 }} </td>
             <td> {{ player.4 }} </td>
             <td> {{ player.5 }} </td>
             <td> {{ player.6 }} </td>
           </tr>
-          </a>
           {% endfor %}
         </tbody>
       </table>
     </div>
+
+    <script>
+      $(document).ready(function() { 
+        $(".clickable-row").click(function() {
+          window.location = $(this).data("href");
+        });
+      });
+    
+    </script>
+
 {% endblock %}

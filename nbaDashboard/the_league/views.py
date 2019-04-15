@@ -222,11 +222,39 @@ def team_dashboard(request):
         
         return redirect('team', abbr)
 
+@csrf_exempt
 def player_dashboard(request):
-    return render(request, 'player_dashboard.html')
+    if request.method == "POST":
+        name = request.POST.get('player_name')
+
+        cursor = connection.cursor()
+        sql_command = "SELECT * FROM Players NATURAL JOIN Plays_For WHERE Player LIKE "
+        sql_command += "'%" + name + "%'"
+        cursor.execute(sql_command)
+        response = cursor.fetchall()
+
+        context = {
+            "players": response,
+        }
+        return render(request, 'player_search_results.html', context = context)
+    else:
+        return render(request, 'player_dashboard.html')
 
 def player(request, player_id):
-    return redirect('team')
+
+    cursor = connection.cursor()
+    sql_command = "SELECT * FROM Players NATURAL JOIN Plays_For WHERE Player_ID="
+    sql_command += str(player_id)
+    cursor.execute(sql_command)
+    response = cursor.fetchall()
+
+    print(sql_command)
+    print(response)
+
+    context = {
+        "player_info": response[0],
+    }
+    return render(request, 'player.html', context = context)
 
 def game_schedule(request):
 

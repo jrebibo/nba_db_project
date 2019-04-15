@@ -1,0 +1,41 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+
+<style>
+    .results_container {
+        position: relative;
+        left: 5%;
+        list-style: none;
+    }
+    .pagetitle {
+        margin: auto;
+        text-align: center;
+        font-size: 30px;
+        font-family: "Pragmatica", arial;
+        color: black;
+        padding: 10px;
+
+    }
+    .resulttitle {
+        font-size: 19px;
+    }
+
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+<div class = pagetitle> Search Results </div>
+
+<div class = results_container>
+    <ul class = results_container>
+        {% for player in players %}
+        <li>
+            <a class = resulttitle href = "{% url 'player' player.0 %}"> {{player.2}} </a>
+            <pre style="margin: 0; padding: 0;"> &emsp; Number: {{ player.1 }}, Position: {{ player.3 }} </pre>
+            <pre style="margin: 0; padding: 0;"> &emsp; Height: {{ player.4 }}, Weight: {{ player.5 }}, Team: {{ player.6 }} </pre>
+        </li>
+        {% endfor %}
+{% endblock %}
