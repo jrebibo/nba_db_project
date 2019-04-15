@@ -45,18 +45,23 @@
 <div class ="container container-centered">
     <div class = row>
         <div class = col-1></div>
-        <div class = col-10>
+        <div class = col-5>
             <a href="{% url 'team_dashboard' %}" style="text-decoration: none">
                 <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">By Team</button>
             </a>
         </div>
+        <div class = col-5>
+                <a href="{% url 'player_dashboard' %}" style="text-decoration: none">
+                    <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">By Player</button>
+                </a>
+            </div>
         <div class = col-1></div>
     </div>
     <div class = row>
         <div class = col-1></div>
         <div class = col-10>
-            <a href="{% url 'player_dashboard' %}" style="text-decoration: none">
-                <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">By Player</button>
+            <a href="{% url 'game_schedule' %}" style="text-decoration: none">
+                <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Game Schedule</button>
             </a>
         </div>
         <div class = col-1></div>

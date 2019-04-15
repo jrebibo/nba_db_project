@@ -18,6 +18,6 @@ urlpatterns = [
     path('team_dashboard', views.team_dashboard, name = 'team_dashboard'),
     path('player_dashboard', views.player_dashboard, name = 'player_dashboard'),
     path('team/<str:team_abbr>', views.team, name = 'team'),
-    path('player/<int:player_id>', views.player, name ='player')
-
+    path('player/<int:player_id>', views.player, name ='player'),
+    path('game_schedule', views.game_schedule, name = 'game_schedule')
 ]

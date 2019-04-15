@@ -227,3 +227,46 @@ def player_dashboard(request):
 
 def player(request, player_id):
     return redirect('team')
+
+def game_schedule(request):
+
+
+    team = request.GET.get('team_selection')
+    print("team", team)
+    cursor = connection.cursor()
+
+    sql_command = "SELECT * From Teams"
+    cursor.execute(sql_command)
+    response = cursor.fetchall()
+
+    teams = []
+    for r in response:
+        temp = r[1] + " " + r[0] + " (" + r[2] + ")"
+        teams.append(temp)
+
+    if team == None or team == "all":
+        sql_command = "SELECT * FROM Schedule"
+        cursor.execute(sql_command)
+        schedule = cursor.fetchall()
+    else:
+        open_parenthesis = team.find('(')
+        team_formatted = team[:open_parenthesis-1]
+
+        print(team_formatted)
+
+        sql_command = "SELECT * FROM Schedule WHERE Visitor="
+        sql_command += "'" + team_formatted + "'"
+        sql_command += " OR Home="
+        sql_command += "'" + team_formatted + "'"
+
+        print(sql_command)
+        cursor.execute(sql_command)
+        schedule = cursor.fetchall()
+
+    print(schedule)
+    context = {
+        "schedule": schedule,
+        "teams": teams,
+    }
+    return render(request, 'game_schedule.html', context = context)
+
