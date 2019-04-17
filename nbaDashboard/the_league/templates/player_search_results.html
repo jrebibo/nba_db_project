@@ -29,13 +29,44 @@
 
 <div class = pagetitle> Search Results </div>
 
-<div class = results_container>
-    <ul class = results_container>
-        {% for player in players %}
-        <li>
-            <a class = resulttitle href = "{% url 'player' player.0 %}"> {{player.2}} </a>
-            <pre style="margin: 0; padding: 0;"> &emsp; Number: {{ player.1 }}, Position: {{ player.3 }} </pre>
-            <pre style="margin: 0; padding: 0;"> &emsp; Height: {{ player.4 }}, Weight: {{ player.5 }}, Team: {{ player.6 }} </pre>
-        </li>
-        {% endfor %}
+<div>
+    <div class = row>
+        <div class = col-4>
+            <ul class = results_container>
+            {% for player in col1 %}
+                <li>
+                    <a class = resulttitle href = "{% url 'player' player.0 %}"> {{player.2}} </a>
+                    <pre style="margin: 0; padding: 0;"> &emsp; Number: {{ player.1 }}, Position: {{ player.3 }} </pre>
+                    <pre style="margin: 0; padding: 0;"> &emsp; Height: {{ player.4 }}, Weight: {{ player.5 }}, Team: {{ player.6 }} </pre>
+                    <br>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class = col-4>
+            <ul class = results_container>
+            {% for player in col2 %}
+                <li>
+                    <a class = resulttitle href = "{% url 'player' player.0 %}"> {{player.2}} </a>
+                    <pre style="margin: 0; padding: 0;"> &emsp; Number: {{ player.1 }}, Position: {{ player.3 }} </pre>
+                    <pre style="margin: 0; padding: 0;"> &emsp; Height: {{ player.4 }}, Weight: {{ player.5 }}, Team: {{ player.6 }} </pre>
+                    <br>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class = col-4>
+            <ul class = results_container>
+            {% for player in col3 %}
+                <li>
+                    <a class = resulttitle href = "{% url 'player' player.0 %}"> {{player.2}} </a>
+                    <pre style="margin: 0; padding: 0;"> &emsp; Number: {{ player.1 }}, Position: {{ player.3 }} </pre>
+                    <pre style="margin: 0; padding: 0;"> &emsp; Height: {{ player.4 }}, Weight: {{ player.5 }}, Team: {{ player.6 }} </pre>
+                    <br>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

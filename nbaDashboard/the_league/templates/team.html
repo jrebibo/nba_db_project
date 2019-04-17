@@ -6,6 +6,51 @@
   .clickable-row :hover {
     cursor: pointer;
   }
+
+
+  .subtitle {
+    margin: auto;
+    text-align: center;
+    font-size: 28px;
+    font-family: "Pragmatica", arial;
+    color: black;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    }
+
+  .subsubtitle {
+    margin: auto;
+    text-align: center;
+    font-size: 28px;
+    font-family: "Pragmatica", arial;
+    color: black;
+    padding-top: 20px;
+    }
+
+  .information {
+    margin: auto;
+    text-align: center;
+    font-size: 18px;
+    font-family: "Pragmatica", arial;
+    color: black;
+    }
+
+
+
+  .link-button {
+    background:none!important;
+    color:inherit;
+    border:none; 
+    padding:0!important;
+    font-size: 28px;
+    font-family: "Pragmatica", arial;
+    cursor: pointer;
+  }
+  .link-button:hover {
+    color: #0645AD;
+    text-decoration-line: underline;
+  }
+  
   
   </style>
 {% endblock %}
@@ -16,7 +61,11 @@
     {{ location }} {{ name }}
 </div>
 <div class = context>
-    <table class="table table-hover">
+  <div class = row>
+    <div class = "col-1"></div>
+    <div class = "col-6">
+      <div class = subtitle> Roster </div>
+      <table class="table table-hover">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -39,6 +88,32 @@
         </tbody>
       </table>
     </div>
+    <div class = "col-4">
+      <br><br><br><br>
+      <center>
+        <div class = subsubtitle> Full Team Name </div>
+        <div class = information> {{ full_team_name }} </div>
+      </center>
+      <br>
+      <center>
+        <div class = subsubtitle> Head Coach </div>
+        <div class = information> {{ head_coach }} </div>
+      </center>
+      <br>
+      <center>
+        <div class = subsubtitle> Roster Size </div>
+        <div class = information> {{ roster_size }} </div>
+      </center>
+      <br> <br> <br>
+      <center>
+      <form method = GET action = "{% url 'game_schedule' %}">
+        <input type = hidden name = "team_selection" value = "{{ full_team_name }}">
+        <button type = submit class = "link-button"> Game Schedule </button>
+      </form>
+      </center>
+    </div>
+  </div>
+</div>
 
     <script>
       $(document).ready(function() { 

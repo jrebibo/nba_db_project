@@ -182,12 +182,31 @@ def team(request, team_abbr):
     cursor.execute(sql_command)
     name = cursor.fetchall()[0][0]
 
+    sql_command = "SELECT Coach_Name FROM Head_Coaches WHERE Abbreviation="
+    sql_command += "'" + team_abbr + "'"
+    cursor.execute(sql_command)
+    head_coach = cursor.fetchall()[0][0]
+
+    sql_command = "SELECT COUNT(Player) FROM Plays_For NATURAL JOIN Players WHERE Abbreviation="
+    sql_command += "'" + team_abbr + "'"
+    cursor.execute(sql_command)
+    roster_size = cursor.fetchall()[0][0]
+
+
+
+
+    # r[1] + " " + r[0] + " (" + r[2] + ")"
+    full_team_name = location + " " + name + " (" + team_abbr + ")"
     print(name)
 
     context = {
         "roster": roster,
         "location": location,
-        "name": name
+        "name": name,
+        "full_team_name": full_team_name,
+        "abbreviation": team_abbr,
+        "head_coach": head_coach,
+        "roster_size": roster_size,
     }
 
 
@@ -233,8 +252,26 @@ def player_dashboard(request):
         cursor.execute(sql_command)
         response = cursor.fetchall()
 
+        col1 = []
+        col2 = []
+        col3 = []
+        col = 1
+
+        for r in response:
+            if col == 1:
+                col1.append(r)
+                col = 2
+            elif col == 2:
+                col2.append(r)
+                col = 3
+            else:
+                col3.append(r)
+                col = 1
+
         context = {
-            "players": response,
+            "col1": col1,
+            "col2": col2,
+            "col3": col3,
         }
         return render(request, 'player_search_results.html', context = context)
     else:
@@ -257,8 +294,6 @@ def player(request, player_id):
     return render(request, 'player.html', context = context)
 
 def game_schedule(request):
-
-
     team = request.GET.get('team_selection')
     print("team", team)
     cursor = connection.cursor()
