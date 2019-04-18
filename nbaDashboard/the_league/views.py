@@ -193,11 +193,19 @@ def team(request, team_abbr):
     roster_size = cursor.fetchall()[0][0]
 
 
+    team_formatted = location + " " + name
+    sql_command = "SELECT * FROM Schedule WHERE Visitor="
+    sql_command += "'" + team_formatted + "'"
+    sql_command += " OR Home="
+    sql_command += "'" + team_formatted + "' ORDER BY Date DESC LIMIT 5"
+    cursor.execute(sql_command)
+    past_five_games = cursor.fetchall()
+
+
 
 
     # r[1] + " " + r[0] + " (" + r[2] + ")"
     full_team_name = location + " " + name + " (" + team_abbr + ")"
-    print(name)
 
     context = {
         "roster": roster,
@@ -207,6 +215,7 @@ def team(request, team_abbr):
         "abbreviation": team_abbr,
         "head_coach": head_coach,
         "roster_size": roster_size,
+        "past_games" : past_five_games
     }
 
 
