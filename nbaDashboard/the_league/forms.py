@@ -11,4 +11,4 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=100, widget = forms.PasswordInput())
 
 class SQLCommandForm(forms.Form):
-    sql_command = forms.Textarea()
+    sql_command = forms.CharField(widget = forms.Textarea(attrs={'rows': 4, 'columns': 20}))

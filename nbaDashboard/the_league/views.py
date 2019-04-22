@@ -469,37 +469,46 @@ def tables(request, table_name):
             "table_name": table_name,
             "table_contents": response,
             "form": form,
-            "columns": columns
+            "columns": columns,
+            "status": "None"
         }
         return render(request, 'admin_table_view.html', context = context)
     else:
-        form = SQLCommandForm(request.POST)
-        sql_command = form.cleaned_data['sql_command']
+        sql_command = request.POST.get('sql_command')
+        print(sql_command)
 
+        cursor = connections['nba'].cursor()
         restricted_commands = ["DROP", "DELETE"]
         for rc in restricted_commands:
             if rc in sql_command:
+                form = SQLCommandForm()
                 context = {
                     "status": "Failure",
                     "comment": "Cannot Execute Command - Restricted Command",
-                    "sql_command": sql_command
+                    "sql_command": sql_command,
+                    "form": form
                 }
                 return render(request, 'admin_table_view.html', context = context)
-        
+
         try:
             cursor.execute(sql_command)
-            response = cursor.execute()
+            response = cursor.fetchall()
         except:
+            form = SQLCommandForm()
             context = {
                     "status": "Failure",
                     "comment": "Could Not Execute Command Successfully",
-                    "sql_command": sql_command
+                    "sql_command": sql_command,
+                    "form": form
                 }
             return render(request, 'admin_table_view.html', context = context)
         else:
+            form = SQLCommandForm()
             context = {
                     "status": "Success",
                     "comment": "Command Executed Successfully",
-                    "sql_command": sql_command
+                    "sql_command": sql_command,
+                    "table_contents": response,
+                    "form": form
                 }
             return render(request, 'admin_table_view.html', context = context)
