@@ -5,3 +5,10 @@ class AddPlayerForm(forms.Form):
     position = forms.CharField(max_length=2)
     height = forms.CharField(max_length=5)
     weight = forms.IntegerField(max_value=450)
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=100)
+    password = forms.CharField(max_length=100, widget = forms.PasswordInput())
+
+class SQLCommandForm(forms.Form):
+    sql_command = forms.Textarea()

@@ -1,0 +1,34 @@
+{% extends 'base_template.html' %}
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+<div class = context>
+    <div class = row>
+        <div class = col-1></div>
+        <div class = col-10>
+            <center class = pagetitle> {{ table_name }} Table </center>
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            {% for c in columns %}
+                            <th scope="col"> {{ c.0 }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_contents %}
+                        <tr>
+                            {% for part in row %}
+                            <td> {{ part }} </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+        <div class = col-1></div>
+    </div>
+</div>
+{% endblock %}

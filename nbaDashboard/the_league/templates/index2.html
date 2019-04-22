@@ -57,6 +57,7 @@
             </div>
         <div class = col-1></div>
     </div>
+    {% if user_type != 'admin' %}
     <div class = row>
         <div class = col-1></div>
         <div class = col-10>
@@ -66,6 +67,22 @@
         </div>
         <div class = col-1></div>
     </div>
+    {% else %}
+    <div class = row>
+            <div class = col-1></div>
+            <div class = col-5>
+                <a href="{% url 'game_schedule' %}" style="text-decoration: none">
+                    <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Game Schedule</button>
+                </a>
+            </div>
+            <div class = col-5>
+                    <a href="{% url 'admin_dashboard' %}" style="text-decoration: none">
+                        <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Admin Dashboard</button>
+                    </a>
+                </div>
+            <div class = col-1></div>
+        </div>
+    {% endif %}
     <!-- <div class = row>
         <div class = col-4>
             <a href="{% url 'team_names' %}" style="text-decoration: none">
