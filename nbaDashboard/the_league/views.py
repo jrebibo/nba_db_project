@@ -1,12 +1,18 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from django.db import connection
+from django.db import connections, connection
 from django.views.decorators.csrf import csrf_exempt
 from .forms import *
 # Create your views here.
 
+from passlib.hash import sha256_crypt
+
 def index(request):
-    cursor = connection.cursor()
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
+    cursor = connections['nba'].cursor()
     cursor.execute('SELECT Name, Location, Abbreviation FROM Teams')
     teams = cursor.fetchall()
     teams_list = []
@@ -14,12 +20,13 @@ def index(request):
         teams_list.append(value[0])
     
     context = {
-        "team_info": teams
+        "team_info": teams,
+        "user_type": request.session['user_type']
     }
     return render(request, 'index2.html', context)
 
 def get_team_info(request):
-    cursor = connection.cursor()
+    cursor = connections['nba'].cursor()
     cursor.execute('SELECT Name, Location, Abbreviation FROM Teams')
     teams = cursor.fetchall()
     context = {
@@ -28,7 +35,7 @@ def get_team_info(request):
     return render(request, 'teams.html', context)
 
 def get_team_names(request):
-    cursor = connection.cursor()
+    cursor = connections['nba'].cursor()
     cursor.execute('SELECT Name FROM Teams')
     teams = cursor.fetchall()
     teams_list = []
@@ -41,7 +48,7 @@ def get_team_names(request):
     return render(request, 'team_names.html', context)
 
 def get_team_abbreviations(request):
-    cursor = connection.cursor()
+    cursor = connections['nba'].cursor()
     cursor.execute('SELECT Abbreviation FROM Teams')
     teams = cursor.fetchall()
     abbr_list = []
@@ -54,12 +61,11 @@ def get_team_abbreviations(request):
     return render(request, 'team_abbreviations.html', context)
 
 def get_team_location(request):
-    cursor = connection.cursor()
+    cursor = connections['nba'].cursor()
     cursor.execute('SELECT Location FROM Teams')
     teams = cursor.fetchall()
     location_list = []
     for value in teams:
-        print(value[0])
         location_list.append(value[0])
 
     context = {
@@ -70,7 +76,7 @@ def get_team_location(request):
 @csrf_exempt
 def view_team_information(request):
     # Connect to DB & Get the requested team_abbreviation from index.html template
-    cursor = connection.cursor()
+    cursor = connections['nba'].cursor()
     team_abbrev = request.POST.get('team_abbreviation')
 
     # Gets location and name of team
@@ -78,7 +84,6 @@ def view_team_information(request):
     sql_command+= "'" + team_abbrev + "'"
     cursor.execute(sql_command)
     team_location_and_name = cursor.fetchall()
-    print(team_location_and_name)
     team = team_location_and_name[0][0] + " " + team_location_and_name[0][1]
 
     # Gets team roster
@@ -125,6 +130,10 @@ def add_information(request):
 
 
 def base_template(request):
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
     return render(request, 'base_template.html')
 
 @csrf_exempt
@@ -144,8 +153,8 @@ def add_player(request):
             # Run command to insert into database
             sql_command = "INSERT INTO Players (No, Player, Pos, Ht, Wt) VALUES ('"
             sql_command += str(number) + "', '" + player + "', '" + position + "', '" + height + "', '" + str(weight) + "')"
-            print("Command", sql_command)
-            cursor = connection.cursor()
+            
+            cursor = connections['nba'].cursor()
             cursor.execute(sql_command)
 
             sql_command = "SELECT Player_ID FROM Players WHERE Player = "
@@ -163,7 +172,13 @@ def add_player(request):
     return HttpResponse(request)
 
 def team(request, team_abbr):
-    cursor = connection.cursor()
+
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
+
+    cursor = connections['nba'].cursor()
     
     sql_command = "SELECT * FROM Plays_For NATURAL JOIN Players WHERE Abbreviation="
     sql_command += "'" + team_abbr + "'"
@@ -176,14 +191,14 @@ def team(request, team_abbr):
         roster.append(r)
 
 
-    print(roster)
+  
 
     sql_command = "SELECT Location FROM Teams WHERE Abbreviation="
     sql_command += "'" + team_abbr + "'"
     cursor.execute(sql_command)
     location = cursor.fetchall()[0][0]
 
-    print(location)
+
 
     sql_command = "SELECT Name FROM Teams WHERE Abbreviation="
     sql_command += "'" + team_abbr + "'"
@@ -201,11 +216,19 @@ def team(request, team_abbr):
     roster_size = cursor.fetchall()[0][0]
 
 
+    team_formatted = location + " " + name
+    sql_command = "SELECT * FROM Schedule WHERE Visitor="
+    sql_command += "'" + team_formatted + "'"
+    sql_command += " OR Home="
+    sql_command += "'" + team_formatted + "' ORDER BY Date DESC LIMIT 5"
+    cursor.execute(sql_command)
+    past_five_games = cursor.fetchall()
+
+
 
 
     # r[1] + " " + r[0] + " (" + r[2] + ")"
     full_team_name = location + " " + name + " (" + team_abbr + ")"
-    print(name)
 
     context = {
         "roster": roster,
@@ -215,6 +238,7 @@ def team(request, team_abbr):
         "abbreviation": team_abbr,
         "head_coach": head_coach,
         "roster_size": roster_size,
+        "past_games" : past_five_games
     }
 
 
@@ -222,8 +246,13 @@ def team(request, team_abbr):
 
 @csrf_exempt
 def team_dashboard(request):
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
+
     if request.method == "GET":
-        cursor = connection.cursor()
+        cursor = connections['nba'].cursor()
         sql_command = "SELECT * From Teams"
         cursor.execute(sql_command)
         response = cursor.fetchall()
@@ -251,10 +280,16 @@ def team_dashboard(request):
 
 @csrf_exempt
 def player_dashboard(request):
+
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
+
     if request.method == "POST":
         name = request.POST.get('player_name')
 
-        cursor = connection.cursor()
+        cursor = connections['nba'].cursor()
         sql_command = "SELECT * FROM Players NATURAL JOIN Plays_For WHERE Player LIKE "
         sql_command += "'%" + name + "%'"
         cursor.execute(sql_command)
@@ -289,24 +324,48 @@ def player_dashboard(request):
 
 def player(request, player_id):
 
-    cursor = connection.cursor()
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
+
+    cursor = connections['nba'].cursor()
     sql_command = "SELECT * FROM Players NATURAL JOIN Plays_For WHERE Player_ID="
     sql_command += str(player_id)
     cursor.execute(sql_command)
-    response = cursor.fetchall()
+    player_info = cursor.fetchall()
 
-    print(sql_command)
-    print(response)
+    sql_command = "SELECT * FROM Awards NATURAL JOIN Awarded WHERE Player_ID="
+    sql_command += str(player_id)
+    cursor.execute(sql_command)
+    awards = cursor.fetchall()
+
+    if len(awards) == 0:
+        awards = (("No Awards Won", player_id)),
+    
+
+    sql_command = "SELECT * FROM Stats WHERE Player_ID="
+    sql_command += str(player_id)
+    cursor.execute(sql_command)
+    stats = cursor.fetchall()
 
     context = {
-        "player_info": response[0],
+        "player_info": player_info[0],
+        "awards": awards,
+        "stats": stats
+
     }
     return render(request, 'player.html', context = context)
 
 def game_schedule(request):
+
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
+
     team = request.GET.get('team_selection')
-    print("team", team)
-    cursor = connection.cursor()
+    cursor = connections['nba'].cursor()
 
     sql_command = "SELECT * From Teams"
     cursor.execute(sql_command)
@@ -325,21 +384,143 @@ def game_schedule(request):
         open_parenthesis = team.find('(')
         team_formatted = team[:open_parenthesis-1]
 
-        print(team_formatted)
-
         sql_command = "SELECT * FROM Schedule WHERE Visitor="
         sql_command += "'" + team_formatted + "'"
         sql_command += " OR Home="
         sql_command += "'" + team_formatted + "'"
 
-        print(sql_command)
         cursor.execute(sql_command)
         schedule = cursor.fetchall()
 
-    print(schedule)
     context = {
         "schedule": schedule,
         "teams": teams,
     }
     return render(request, 'game_schedule.html', context = context)
 
+def login(request):
+    if request.method == "GET":
+        form = LoginForm()
+        return render(request, 'login.html', {'form': form} )
+    else:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            cursor = connections['nba'].cursor()
+            sql_command = "SELECT Password,User_Type FROM Users WHERE Username="
+            sql_command += "'" + form.cleaned_data['username'] + "'"
+            cursor.execute(sql_command)
+            response = cursor.fetchall()
+            
+            if len(response) <= 0:
+                return redirect('login')
+            
+            password = response[0][0]
+            user_type = response[0][1]
+
+            if sha256_crypt.verify(form.cleaned_data['password'], password):
+                request.session['username'] = form.cleaned_data['username']
+                request.session['user_type'] = user_type
+                return redirect('index')
+            else:
+                return redirect('login')
+
+def logout(request):
+    try:
+        del request.session['username']
+        del request.session['user_type']
+    except:
+        return redirect('login')
+    return redirect('login')
+
+def admin_dashboard(request):
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
+
+    if request.session['user_type'] != 'admin':
+        return redirect('login')
+    cursor = connections['nba'].cursor()
+    sql_command = "SELECT table_name FROM information_schema.tables WHERE table_schema ='rk2ea_nba'"
+    cursor.execute(sql_command)
+    response = cursor.fetchall()
+
+    tables = []
+    for r in response:
+        tables.append(r[0])
+    
+    context = {
+        "tables": tables,
+    }
+    return render(request, 'admin_dashboard.html', context = context)
+
+def tables(request, table_name):
+    try:
+        user_type = request.session['user_type']
+    except:
+        return redirect('login')
+
+    if request.method == 'GET':
+        if request.session['user_type'] != 'admin':
+            redirect('login')
+    
+        cursor = connections['nba'].cursor()
+        sql_command = "SELECT * FROM " + table_name
+        cursor.execute(sql_command)
+        response = cursor.fetchall()
+
+        sql_command = "SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='rk2ea_nba' AND `TABLE_NAME`='" + table_name + "'";
+        cursor.execute(sql_command)
+        columns = cursor.fetchall()
+        print(columns)
+
+
+        form = SQLCommandForm()
+
+        context = {
+            "table_name": table_name,
+            "table_contents": response,
+            "form": form,
+            "columns": columns,
+            "status": "None"
+        }
+        return render(request, 'admin_table_view.html', context = context)
+    else:
+        sql_command = request.POST.get('sql_command')
+        print(sql_command)
+
+        cursor = connections['nba'].cursor()
+        restricted_commands = ["DROP", "DELETE"]
+        for rc in restricted_commands:
+            if rc in sql_command:
+                form = SQLCommandForm()
+                context = {
+                    "status": "Failure",
+                    "comment": "Cannot Execute Command - Restricted Command",
+                    "sql_command": sql_command,
+                    "form": form
+                }
+                return render(request, 'admin_table_view.html', context = context)
+
+        try:
+            cursor.execute(sql_command)
+            response = cursor.fetchall()
+        except:
+            form = SQLCommandForm()
+            context = {
+                    "status": "Failure",
+                    "comment": "Could Not Execute Command Successfully",
+                    "sql_command": sql_command,
+                    "form": form
+                }
+            return render(request, 'admin_table_view.html', context = context)
+        else:
+            form = SQLCommandForm()
+            context = {
+                    "status": "Success",
+                    "comment": "Command Executed Successfully",
+                    "sql_command": sql_command,
+                    "table_contents": response,
+                    "form": form
+                }
+            return render(request, 'admin_table_view.html', context = context)

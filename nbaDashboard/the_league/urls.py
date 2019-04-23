@@ -19,5 +19,9 @@ urlpatterns = [
     path('player_dashboard', views.player_dashboard, name = 'player_dashboard'),
     path('team/<str:team_abbr>', views.team, name = 'team'),
     path('player/<int:player_id>', views.player, name ='player'),
-    path('game_schedule', views.game_schedule, name = 'game_schedule')
+    path('game_schedule', views.game_schedule, name = 'game_schedule'),
+    path('login', views.login, name = 'login'),
+    path('logout', views.logout, name = 'logout'),
+    path('admin_dashboard', views.admin_dashboard, name = 'admin_dashboard'),
+    path('tables/<str:table_name>', views.tables, name = 'tables')
 ]

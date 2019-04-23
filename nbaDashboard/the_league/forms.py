@@ -40,3 +40,10 @@ class AddPlayerForm(forms.Form):
     height = forms.CharField(max_length=5)
     weight = forms.IntegerField(max_value=450)
     team = forms.ChoiceField(choices=choices)
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=100)
+    password = forms.CharField(max_length=100, widget = forms.PasswordInput())
+
+class SQLCommandForm(forms.Form):
+    sql_command = forms.CharField(widget = forms.Textarea(attrs={'rows': 4, 'columns': 20}))

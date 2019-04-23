@@ -3,7 +3,7 @@
 
 {% block head %}
   <style>
-  .clickable-row :hover {
+  .clickable-row:hover {
     cursor: pointer;
   }
 
@@ -50,6 +50,8 @@
     color: #0645AD;
     text-decoration-line: underline;
   }
+
+
   
   
   </style>
@@ -65,7 +67,7 @@
     <div class = "col-1"></div>
     <div class = "col-6">
       <div class = subtitle> Roster </div>
-      <table class="table table-hover">
+      <table class="table table-hover table-bordered">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -89,7 +91,7 @@
       </table>
     </div>
     <div class = "col-4">
-      <br><br><br><br>
+      <br><br><br>
       <center>
         <div class = subsubtitle> Full Team Name </div>
         <div class = information> {{ full_team_name }} </div>
@@ -104,12 +106,36 @@
         <div class = subsubtitle> Roster Size </div>
         <div class = information> {{ roster_size }} </div>
       </center>
-      <br> <br> <br>
+      <br> <br>
       <center>
       <form method = GET action = "{% url 'game_schedule' %}">
         <input type = hidden name = "team_selection" value = "{{ full_team_name }}">
-        <button type = submit class = "link-button"> Game Schedule </button>
+        <button type = submit class = "link-button"> Full Game Schedule </button>
       </form>
+      <table class="table table-hover table-sm table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Home</th>
+            <th scope="col">Home Points</th>
+            <th scope="col">Visitor</th>
+            <th scope="col">Visitor Points</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for game in past_games %}
+          <tr>
+            <td> {{ game.1 }} </td>
+            <td> {{ game.2 }} </td>
+            <td> {{ game.3 }} </td>
+            <td> {{ game.4 }} </td>
+            <td> {{ game.5 }} </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
       </center>
     </div>
   </div>

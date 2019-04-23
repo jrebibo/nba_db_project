@@ -1,0 +1,106 @@
+{% extends 'base_template.html' %}
+{% block head %}
+
+<style>
+            #go {
+                background-color: #3E88B7;
+                height: 35px;
+                width: 200px;
+                color: white;
+                border-style: solid;
+                border-color: #414042;
+                border-radius: 5px;
+                border-width: 1px;
+            }
+            {% if status == "Failure" %}
+            .sql_response_contents {
+                border-style: solid;
+                border-color: red;
+                width: 100%;
+                border-width: 2px;
+                padding: 10px;
+            }  
+            {% elif status == "Success" %}
+            .sql_response_contents {
+                border-style: solid;
+                border-color: green;
+                width: 100%;
+                border-width: 2px;
+                padding: 10px;
+            }
+            {% else %}
+            .sql_response_contents {
+                border-style: solid;
+                border-color: black;
+                width: 100%;
+                border-width: 2px;
+                padding: 10px;
+            }
+            {% endif %}
+
+            .spacer{
+                margin: 50px;
+            } 
+
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class = spacer></div>
+<div class = context>
+    {% if status == "Success" or status == "Failure" %}
+    <div class = row>
+        <div class = col-1></div>
+        <div class = col-10>
+            <center>
+            <div class = sql_response_contents>
+                <strong> {{ status }} </strong> <br> {{ comment }} <br> {{sql_command}}
+            </div>
+        </center>
+        </div>
+        <div class = col-1></div>
+    </div>
+    <br>
+    {% endif %}
+    <div class = row>
+            <div class = col-1></div>
+            <div class = col-10>
+                <form class = sql_command_form action = "" method = POST>
+                    {% csrf_token %}
+                    <center class = text-area>{{ form.sql_command }} </center>
+                    <br>
+                    <center> <button type = submit id = go> Run SQL Command</button> </center>
+                </form>
+            </div>
+            <div class = col-1></div>
+    </div>
+    {% if status != "Failure" %}
+    <div class = row>
+        <div class = col-1></div>
+        <div class = col-10>
+            <center class = pagetitle> {{ table_name }} Table </center>
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            {% for c in columns %}
+                            <th scope="col"> {{ c.0 }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_contents %}
+                        <tr>
+                            {% for part in row %}
+                            <td> {{ part }} </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+        <div class = col-1></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
