@@ -148,6 +148,7 @@ def add_player(request):
             position = form.cleaned_data['position']
             height = form.cleaned_data['height']
             weight = form.cleaned_data['weight']
+            team = form.cleaned_data['team']
 
             # Run command to insert into database
             sql_command = "INSERT INTO Players (No, Player, Pos, Ht, Wt) VALUES ('"
@@ -155,10 +156,19 @@ def add_player(request):
             
             cursor = connections['nba'].cursor()
             cursor.execute(sql_command)
-            response = cursor.fetchall()
-           
 
-            return redirect("home")
+            sql_command = "SELECT Player_ID FROM Players WHERE Player = "
+            sql_command+= "'" + str(player) + "' AND No = "
+            sql_command+= "'" + str(number) + "'"
+            cursor.execute(sql_command)
+            response = cursor.fetchall()
+            player_id = response[0][0]
+
+            sql_command = "INSERT INTO Plays_For (Player_ID, Abbreviation) VALUES ('"
+            sql_command+= str(player_id) + "', '" + str(team) + "')"
+            cursor.execute(sql_command)
+
+            return redirect("index")
     return HttpResponse(request)
 
 def team(request, team_abbr):
@@ -308,7 +318,9 @@ def player_dashboard(request):
         }
         return render(request, 'player_search_results.html', context = context)
     else:
-        return render(request, 'player_dashboard.html')
+        form = AddPlayerForm()
+        context = {"form": form}
+        return render(request, 'player_dashboard.html', context= context)
 
 def player(request, player_id):
 
