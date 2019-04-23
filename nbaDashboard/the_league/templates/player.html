@@ -2,8 +2,20 @@
 
 
 {% block body %}
-<div class = pagetitle>
+<div class = pagetitle style="margin: 0 auto">
     {{player_info.2}}
+    <table style="text-align: center; margin: auto; margin-top: 30px">
+        <tr style="margin-bottom: 30px">
+            <th>Points per Game</th>
+            <th>Rebounds per Game</th> 
+            <th>Assists per Game</th>
+        </tr>
+        <tr>
+            <td> {{ stats.1 }} </td>
+            <td> {{ stats.2 }} </td>
+            <td> {{ stats.3 }} </td>
+        </tr>
+    </table>
 </div>
 
 {% endblock %}
