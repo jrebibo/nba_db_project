@@ -27,6 +27,18 @@
                 border-width: 1px;
                 -webkit-border-radius: 100px;
             }
+            .identifier2 {
+                width: 25%;
+			    height: 7%;
+			    background: white;
+			    font-family: 'Pragmatica', arial;
+                position: absolute;
+			    top: 80%;
+			    left:50%;
+			    transform: translate(-50%,-50%);
+                padding-left: 1%;
+                outline: none;
+            }
             .gobutton {
                 position: absolute;
                 top: 50%;
@@ -55,6 +67,17 @@
                 outline: none;
             }
 
+            .form2_title {
+                position: absolute;
+                top: 70%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+			    font-family: 'Pragmatica', arial;
+                font-size: 45px;
+                color: black;
+                outline: none;
+            }
+
 
 </style>
 
@@ -69,8 +92,19 @@
         <button type = submit class = gobutton> Go </button>
     </form>
 
-
+    <p class = form2_title> Add a Player</p>
+    <form method= POST enctype="multipart/form-data" action="add_player">
+    <div class="identifier2">
+    <table> {{ form.as_table }}</table>
+    <!-- {% for field in form %}
+      <div class=identifier2>
+        {{ field.label_tag }}<br>
+        {{ field }}
+      </div>
+    {% endfor %} -->
+    <button type="submit">Create</button>
+    </div>
+  </form>
 <!-- </div> -->
-
 
 {% endblock %}
