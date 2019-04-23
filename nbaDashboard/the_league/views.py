@@ -321,12 +321,16 @@ def player(request, player_id):
     sql_command = "SELECT * FROM Players NATURAL JOIN Plays_For WHERE Player_ID="
     sql_command += str(player_id)
     cursor.execute(sql_command)
-    player_info = cursor.fetchall()
+    player_info = cursor.fetchall()[0]
+
+    print("player_info \n", player_info)
 
     sql_command = "SELECT * FROM Awards NATURAL JOIN Awarded WHERE Player_ID="
     sql_command += str(player_id)
     cursor.execute(sql_command)
     awards = cursor.fetchall()
+
+    print("awards \n", awards)
 
     if len(awards) == 0:
         awards = (("No Awards Won", player_id)),
@@ -335,12 +339,36 @@ def player(request, player_id):
     sql_command = "SELECT * FROM Stats WHERE Player_ID="
     sql_command += str(player_id)
     cursor.execute(sql_command)
-    stats = cursor.fetchall()
+    stats = cursor.fetchall()[0]
+
+    print("stats \n", stats)
+
+    sql_command = "SELECT * FROM Plays_For NATURAL JOIN Teams NATURAL JOIN Head_Coaches WHERE Player_ID="
+    sql_command += str(player_id)
+    cursor.execute(sql_command)
+    team_info = cursor.fetchall()
+
+    print("team_info \n", team_info)
+
+
+    sql_command = "SELECT * FROM Players NATURAL JOIN Plays_For WHERE Abbreviation = ("
+    sql_command += "SELECT Abbreviation FROM Players NATURAL JOIN Plays_For WHERE Player_ID = "
+    sql_command += str(player_id)
+    sql_command += ")"
+    cursor.execute(sql_command)
+    team_roster = cursor.fetchall()
+
+    print("team_roster \n", team_roster)
+
+
+
 
     context = {
         "player_info": player_info[0],
         "awards": awards,
-        "stats": stats
+        "stats": stats,
+        "team_info": team_info,
+        "team_roster": team_roster
 
     }
     return render(request, 'player.html', context = context)
