@@ -352,7 +352,7 @@ def player(request, player_id):
     context = {
         "player_info": player_info[0],
         "awards": awards,
-        "stats": stats
+        "stats": stats[0]
 
     }
     return render(request, 'player.html', context = context)
