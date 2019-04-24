@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.db import connections, connection
 from django.views.decorators.csrf import csrf_exempt
 from .forms import *
+import csv
 # Create your views here.
 
 from passlib.hash import sha256_crypt
@@ -149,6 +150,9 @@ def add_player(request):
             height = form.cleaned_data['height']
             weight = form.cleaned_data['weight']
             team = form.cleaned_data['team']
+            ppg = form.cleaned_data['ppg']
+            rpg = form.cleaned_data['rpg']
+            apg = form.cleaned_data['apg']
 
             # Run command to insert into database
             sql_command = "INSERT INTO Players (No, Player, Pos, Ht, Wt) VALUES ('"
@@ -166,6 +170,11 @@ def add_player(request):
 
             sql_command = "INSERT INTO Plays_For (Player_ID, Abbreviation) VALUES ('"
             sql_command+= str(player_id) + "', '" + str(team) + "')"
+            cursor.execute(sql_command)
+
+            sql_command = "INSERT INTO Stats VALUES ("
+            sql_command += "'" + str(player_id) + "', '" + str(ppg) + "', '" + str(rpg) + "', '" + str(apg) + "'"
+            sql_command += ")"
             cursor.execute(sql_command)
 
             return redirect("index")
@@ -319,7 +328,11 @@ def player_dashboard(request):
         return render(request, 'player_search_results.html', context = context)
     else:
         form = AddPlayerForm()
-        context = {"form": form}
+        context = {
+            "form": form,
+            "user_type": request.session['user_type']
+        
+        }
         return render(request, 'player_dashboard.html', context= context)
 
 def player(request, player_id):
@@ -358,7 +371,7 @@ def player(request, player_id):
     sql_command = "SELECT * FROM Plays_For NATURAL JOIN Teams NATURAL JOIN Head_Coaches WHERE Player_ID="
     sql_command += str(player_id)
     cursor.execute(sql_command)
-    team_info = cursor.fetchall()
+    team_info = cursor.fetchall()[0]
 
     print("team_info \n", team_info)
 
@@ -372,19 +385,13 @@ def player(request, player_id):
 
     print("team_roster \n", team_roster)
 
-
-
-
     context = {
-        "player_info": player_info[0],
-        "awards": awards,
-<<<<<<< HEAD
+        "player_info": player_info,
+        "awards": awards[0],
         "stats": stats,
         "team_info": team_info,
-        "team_roster": team_roster
-=======
-        "stats": stats[0]
->>>>>>> d8320d9774eb60b2827b3f79cb75b215c8a23999
+        "team_roster": team_roster,
+        "user_type": request.session['user_type']
 
     }
     return render(request, 'player.html', context = context)
@@ -522,7 +529,7 @@ def tables(request, table_name):
         print(sql_command)
 
         cursor = connections['nba'].cursor()
-        restricted_commands = ["DROP", "DELETE"]
+        restricted_commands = ["DROP"]
         for rc in restricted_commands:
             if rc in sql_command:
                 form = SQLCommandForm()
@@ -556,3 +563,36 @@ def tables(request, table_name):
                     "form": form
                 }
             return render(request, 'admin_table_view.html', context = context)
+@csrf_exempt
+def remove_player(request):
+    if request.method == 'POST':
+        player_id = request.POST.get('player')
+        cursor = connections['nba'].cursor() 
+        sql_command = "DELETE FROM Players WHERE Player_ID="
+        sql_command += str(player_id)
+        cursor.execute(sql_command)
+        return redirect('index')
+    else:
+        return redirect('index')
+
+@csrf_exempt
+def export_roster(request):
+    cursor = connections['nba'].cursor()
+    team_abbr = request.POST.get('abbr')
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="Roster.csv'
+
+    writer = csv.writer(response)
+    sql_command = "SELECT Player, No, Pos, Ht, Wt FROM Players NATURAL JOIN Plays_For WHERE Abbreviation='" + str(team_abbr) + "'"
+    print("Command Here", sql_command)
+    cursor.execute(sql_command)
+    roster = cursor.fetchall()
+    print("Roster", roster)
+    print("Roster0", roster[0])
+    writer.writerow(['Player Name', 'Number', 'Position', 'Height', 'Weight'])
+
+    for value in roster:
+        print(value[1])
+        writer.writerow([str(value[0]), str(value[1]), str(value[2]), str(value[3]), str(value[4])])
+
+    return response

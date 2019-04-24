@@ -10,72 +10,53 @@
 			    padding: 0px !important;
 			    margin: 0px !important;
 		    }
-            .identifier {
-                width: 25%;
-			    height: 7%;
-			    background: white;
-			    border-style: solid;
-			    border-color: black;
-			    font-family: 'Pragmatica', arial;
-                border-radius: 5px;
-                position: absolute;
-			    top: 50%;
-			    left:50%;
-			    transform: translate(-50%,-50%);
-                padding-left: 1%;
-                outline: none;
-                border-width: 1px;
-            }
-            .identifier2 {
-                width: 25%;
-			    height: 7%;
-			    background: white;
-			    font-family: 'Pragmatica', arial;
-                position: absolute;
-			    top: 80%;
-			    left:50%;
-			    transform: translate(-50%,-50%);
-                padding-left: 1%;
-                outline: none;
-            }
             .gobutton {
-                position: absolute;
-                top: 50%;
-                left: 60%;
-                transform: translate(-50%,-50%);
                 background: #E57200;
 			    border-style: solid;
 			    border-color: black;
 			    font-family: 'Pragmatica', arial;
                 border-radius: 5px;
-                width: 5%;
-                height: 7%;
+                width: 100px;
+                height: 40px;   
                 color: white;
                 outline: none;
                 border-width: 1px;
             }
 
             .form_title{
-                position: absolute;
-                top: 40%;
-                left: 50%;
-                transform: translate(-50%,-50%);
 			    font-family: 'Pragmatica', arial;
-                font-size: 45px;
+                font-size: 38px;
                 color: black;
                 outline: none;
+                padding-bottom: 5px;   
             }
 
-            .form2_title {
-                position: absolute;
-                top: 70%;
-                left: 50%;
-                transform: translate(-50%,-50%);
-			    font-family: 'Pragmatica', arial;
-                font-size: 45px;
-                color: black;
-                outline: none;
+
+            .form {
+                border-style: solid;
+                border-color: darkgrey;
+                border-radius: 3px;
+                border-width: 3px;
+                background: #ECECEC;
+                padding: 15px;
             }
+            .spacer{
+                margin: 20px;
+            }
+           .identifier {
+                width: 50%;
+                height: 5%;
+			    background: white;
+			    border-style: solid;
+			    border-color: black;
+			    font-family: 'Pragmatica', arial;
+                border-radius: 5px;
+                padding: 1%;
+                margin: 4px;
+                outline: none;
+                border-width: 1px;
+            }
+
 
 
 </style>
@@ -84,7 +65,57 @@
 
 {% block body %}
 
-<!-- <div class = container> -->
+
+<div class = spacer></div>
+<div class = content>
+    <div class = row>
+        <div class = col-4></div>
+        <div class = col-4>
+            <form method = POST class = form>
+                <center>
+                <div class = form_title> Search for a Player </div>
+            </center>
+                <center>
+                <input type = text class = identifier placeholder = "Player Name" name = "player_name">
+                </center> <br>
+                <center>
+                <button type = submit class = gobutton> Go </button>
+                </center>
+            </form>
+        </div>
+        <div class = col-4></div>
+    </div>
+    {% if user_type == 'admin' %}
+    <div class = row>
+        <div class = col-4></div>
+        <div class = col-4>
+            <form method= POST enctype="multipart/form-data" action="add_player" class = form>
+                <center>
+                <div class = form_title> Insert Player</div>
+                </center>
+                    <center> {{ form.player }} {{ form.number }} </center>
+                    <center> {{ form.position }} </center>
+                    <center> {{ form.height }} {{ form.weight }} </center>
+                    <center> {{ form.team }} </center>
+                    <center> {{ form.ppg }} </center>
+                    <center> {{ form.apg }} </center>
+                    <center> {{ form.rpg }} </center>
+                    <br>
+                    <center> <button type="submit" class = gobutton>Create</button> </center>
+                  </form>
+        </div>
+        <div class = col-4></div>
+    </div>
+    {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+<!-- <div class = container>
     <p class = form_title> Search for a Player </p> 
     <form method = POST>
         <input type = text class = identifier placeholder = "Player Name" name = "player_name">
@@ -92,18 +123,14 @@
     </form>
 
     <p class = form2_title> Add a Player</p>
-    <form method= POST enctype="multipart/form-data" action="add_player">
-    <div class="identifier2">
-    <table> {{ form.as_table }}</table>
-    <!-- {% for field in form %}
-      <div class=identifier2>
-        {{ field.label_tag }}<br>
-        {{ field }}
-      </div>
-    {% endfor %} -->
-    <button type="submit">Create</button>
-    </div>
-  </form>
-<!-- </div> -->
+    <form method= POST enctype="multipart/form-data" action="add_player" class = add_player_form>
+    <center> {{ form.player }} </center>
+    <center> {{ form.number }} </center>
+    <center> {{ form.position }} </center>
+    <center> {{ form.height }} </center>
+    <center> {{ form.weight }} </center>
+    <center> {{ form.team }} </center>
+    <center> <button type="submit">Create</button> </center>
+  </form>  -->
 
 {% endblock %}

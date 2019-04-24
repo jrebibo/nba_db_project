@@ -34,15 +34,19 @@ class AddPlayerForm(forms.Form):
         ('WAS', 'Washington Wizards'),
 
     )
-    number = forms.IntegerField(max_value=100)
-    player = forms.CharField(max_length=40)
-    position = forms.CharField(max_length=2)
-    height = forms.CharField(max_length=5)
-    weight = forms.IntegerField(max_value=450)
-    team = forms.ChoiceField(choices=choices)
+    number = forms.IntegerField(max_value=100, widget=forms.TextInput(attrs={'placeholder': 'Player Number', 'class': 'identifier'}))
+    player = forms.CharField(max_length=40, widget=forms.TextInput(attrs={'placeholder': 'Player Name', 'class': 'identifier'}))
+    position = forms.CharField(max_length=2, widget=forms.TextInput(attrs={'placeholder': 'Position', 'class': 'identifier'}))
+    height = forms.CharField(max_length=5, widget=forms.TextInput(attrs={'placeholder': 'Height', 'class': 'identifier'}))
+    weight = forms.IntegerField(max_value=450, widget=forms.TextInput(attrs={'placeholder': 'Weight', 'class': 'identifier'}))
+    team = forms.ChoiceField(choices=choices, widget = forms.Select(attrs={'class': 'identifier'}))
+    ppg = forms.DecimalField(max_value=100, widget=forms.TextInput(attrs={'placeholder': 'Points Per Game', 'class': 'identifier'}))
+    rpg = forms.DecimalField(max_value=100, widget=forms.TextInput(attrs={'placeholder': 'Rebounds Per Game', 'class': 'identifier'}))
+    apg = forms.DecimalField(max_value=100, widget=forms.TextInput(attrs={'placeholder': 'Assists Per Game', 'class': 'identifier'}))
+
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=100)
+    username = forms.CharField(max_length=100)  
     password = forms.CharField(max_length=100, widget = forms.PasswordInput())
 
 class SQLCommandForm(forms.Form):

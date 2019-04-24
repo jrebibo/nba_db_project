@@ -1,21 +1,120 @@
 {% extends 'base_template.html' %}
+{% block head %}
 
+<style>
+        .pagetitle {
+            margin: auto;
+            text-align: center;
+            font-size: 35px;
+            font-family: "Pragmatica", arial;
+            color: black;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+        .subtitle {
+            margin: auto;
+            text-align: center;
+            font-size: 28px;
+            font-family: "Pragmatica", arial;
+            color: black;
+            padding-bottom: 10px;
+        }
+        .box {
+            border: 2px;
+            border-style: solid;
+            border-color: black;
+            padding:20px;
+        }
+        .box2 {
+            border: 2px;
+            border-style: solid;
+            border-color: black;
+            padding-top:29px;
+            padding-bottom:28px;
+        }
+
+</style>
+{% endblock %}
 
 {% block body %}
-<div class = pagetitle style="margin: 0 auto">
-    {{player_info.2}}
-    <table style="text-align: center; margin: auto; margin-top: 30px">
-        <tr style="margin-bottom: 30px">
-            <th>Points per Game</th>
-            <th>Rebounds per Game</th> 
-            <th>Assists per Game</th>
-        </tr>
-        <tr>
-            <td> {{ stats.1 }} </td>
-            <td> {{ stats.2 }} </td>
-            <td> {{ stats.3 }} </td>
-        </tr>
-    </table>
+<center class = pagetitle> {{ player_info.2}} </center>
+<div class = content>
+    <div class = row>
+        <div class = col-1></div>
+        <div class = col-6>
+            <center class = subtitle> {{team_info.0}} Roster</center>
+            <table class="table table-hover table-bordered table-sm">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Position</th>
+                        <th scope="col">Height</th>
+                        <th scope="col">Weight</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for player in team_roster %}
+                      <tr class = 'clickable-row' data-href ="{% url 'player' player.0 %}">
+                        <td> {{ player.1 }} </td>
+                        <td> {{ player.2 }} </td>
+                        <td> {{ player.3 }} </td>
+                        <td> {{ player.4 }} </td>
+                        <td> {{ player.5 }} </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+        </div>
+        <div class = col-2>
+            <br><br><br>
+            <div class = box2>
+            <div class = subtitle> About </div>
+            <center style = "margin-bottom: 5px;"> Team: {{team_info.3}} {{team_info.2}} </center>
+            <center style = "margin-bottom: 5px;"> Head Coach: {{team_info.4}} </center>
+            <br>
+            <center style = "margin-bottom: 5px;"> Number: {{player_info.1}} </center>
+            <center style = "margin-bottom: 5px;"> Position: {{player_info.3}} </center>
+            <center style = "margin-bottom: 5px;"> Height: {{player_info.4}} </center>
+            <center style = "margin-bottom: 5px;"> Weight: {{player_info.5}} </center>
+        </div>
+        </div>
+        <div class = col-2>
+            <br><br><br>
+            <div class = box>
+            <div class = subtitle> Statistics </div>
+            <div>
+                <center style = "margin-bottom: 5px;">Points Per Game: {{stats.1}}</center>
+                <center style = "margin-bottom: 5px;">Rebounds Per Game: {{stats.2}}</center>
+                <center style = "margin-bottom: 5px;">Assists Per Game: {{stats.3}}</center>
+            </div>
+            <br> <br>
+            <div class = subtitle> Awards </div>
+            <div>
+                <center style = "margin-bottom: 5px;">{{awards.0}}</center>
+            </div>
+        </div>
+        </div>
+        <div class = col-1></div>
+    </div>
+    {% if user_type == 'admin' %}
+    <center>
+      {% csrf_token %}
+      <form method = POST action = "{% url 'remove_player' %}">
+        <input type = hidden value = {{player_info.0}} name = 'player'>
+        <button class = "btn btn-danger" type = submit> Remove Player</button>
+      </form>
+    </center>
+    {% endif %}
 </div>
+
+<script>
+        $(document).ready(function() { 
+          $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+          });
+        });
+      
+      </script>
 
 {% endblock %}

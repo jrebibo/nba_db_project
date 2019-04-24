@@ -23,5 +23,7 @@ urlpatterns = [
     path('login', views.login, name = 'login'),
     path('logout', views.logout, name = 'logout'),
     path('admin_dashboard', views.admin_dashboard, name = 'admin_dashboard'),
-    path('tables/<str:table_name>', views.tables, name = 'tables')
+    path('tables/<str:table_name>', views.tables, name = 'tables'),
+    path('remove_player', views.remove_player, name='remove_player'),
+    path('export_roster', views.export_roster, name = 'export_roster')
 ]
