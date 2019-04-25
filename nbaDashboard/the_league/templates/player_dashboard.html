@@ -1,0 +1,136 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+    <style>
+
+            .container {
+			    position: relative;
+			    width: 100%;
+                height: 100%;
+			    padding: 0px !important;
+			    margin: 0px !important;
+		    }
+            .gobutton {
+                background: #E57200;
+			    border-style: solid;
+			    border-color: black;
+			    font-family: 'Pragmatica', arial;
+                border-radius: 5px;
+                width: 100px;
+                height: 40px;   
+                color: white;
+                outline: none;
+                border-width: 1px;
+            }
+
+            .form_title{
+			    font-family: 'Pragmatica', arial;
+                font-size: 38px;
+                color: black;
+                outline: none;
+                padding-bottom: 5px;   
+            }
+
+
+            .form {
+                border-style: solid;
+                border-color: darkgrey;
+                border-radius: 3px;
+                border-width: 3px;
+                background: #ECECEC;
+                padding: 15px;
+            }
+            .spacer{
+                margin: 20px;
+            }
+           .identifier {
+                width: 50%;
+                height: 5%;
+			    background: white;
+			    border-style: solid;
+			    border-color: black;
+			    font-family: 'Pragmatica', arial;
+                border-radius: 5px;
+                padding: 1%;
+                margin: 4px;
+                outline: none;
+                border-width: 1px;
+            }
+
+
+
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+
+<div class = spacer></div>
+<div class = content>
+    <div class = row>
+        <div class = col-4></div>
+        <div class = col-4>
+            <form method = POST class = form>
+                <center>
+                <div class = form_title> Search for a Player </div>
+            </center>
+                <center>
+                <input type = text class = identifier placeholder = "Player Name" name = "player_name">
+                </center> <br>
+                <center>
+                <button type = submit class = gobutton> Go </button>
+                </center>
+            </form>
+        </div>
+        <div class = col-4></div>
+    </div>
+    {% if user_type == 'admin' %}
+    <div class = row>
+        <div class = col-4></div>
+        <div class = col-4>
+            <form method= POST enctype="multipart/form-data" action="add_player" class = form>
+                <center>
+                <div class = form_title> Insert Player</div>
+                </center>
+                    <center> {{ form.player }} {{ form.number }} </center>
+                    <center> {{ form.position }} </center>
+                    <center> {{ form.height }} {{ form.weight }} </center>
+                    <center> {{ form.team }} </center>
+                    <center> {{ form.ppg }} </center>
+                    <center> {{ form.apg }} </center>
+                    <center> {{ form.rpg }} </center>
+                    <br>
+                    <center> <button type="submit" class = gobutton>Create</button> </center>
+                  </form>
+        </div>
+        <div class = col-4></div>
+    </div>
+    {% endif %}
+
+
+    </div>
+
+
+</div>
+
+
+<!-- <div class = container>
+    <p class = form_title> Search for a Player </p> 
+    <form method = POST>
+        <input type = text class = identifier placeholder = "Player Name" name = "player_name">
+        <button type = submit class = gobutton> Go </button>
+    </form>
+
+    <p class = form2_title> Add a Player</p>
+    <form method= POST enctype="multipart/form-data" action="add_player" class = add_player_form>
+    <center> {{ form.player }} </center>
+    <center> {{ form.number }} </center>
+    <center> {{ form.position }} </center>
+    <center> {{ form.height }} </center>
+    <center> {{ form.weight }} </center>
+    <center> {{ form.team }} </center>
+    <center> <button type="submit">Create</button> </center>
+  </form>  -->
+
+{% endblock %}

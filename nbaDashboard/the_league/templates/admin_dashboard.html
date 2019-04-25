@@ -1,0 +1,56 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+
+<style>
+        .pagetitle {
+            margin: auto;
+            text-align: center;
+            font-size: 35px;
+            font-family: "Pragmatica", arial;
+            color: black;
+            padding-top: 20px;
+            padding-bottom: 10px;
+        }
+    
+        .button_height{
+            height: 150px;
+            margin: 20px;
+            color: white;
+            border-color: black;
+            background-color: #FE7E03;
+            opacity: .95;
+        }
+    
+        .button_height :hover {
+            border-color:black;
+            border-style: solid;
+        }
+        .container-center{
+            width: 100%;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 100%;
+            transform: translate(-50%, -50%);
+        }
+        .spacer{
+            margin: 100px;
+        }
+        </style>
+{% endblock %}
+
+{% block body %}
+<div class = pagetitle> Admin Dashboard </div>
+<div class ="container container-centered">
+{% for table_name in tables %}
+    <div class = row>
+        <div class = col-1></div>
+        <div class = col-10>
+            <a href="{% url 'tables' table_name %}" style="text-decoration: none">
+                <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height"> {{ table_name }} </button>
+            </a>
+        </div>
+        <div class = col-1></div>
+    </div>
+{% endfor %}
+{% endblock %}

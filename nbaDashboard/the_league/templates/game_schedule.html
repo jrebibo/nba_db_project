@@ -1,0 +1,80 @@
+{% extends 'base_template.html' %}
+
+
+{% block head %}
+
+<script src="https://code.jquery.com/jquery-3.4.0.js" integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo=" crossorigin="anonymous"></script>
+
+<style>
+    .identifier {
+        width: 25%;
+		height: 7%;
+		background: white;
+		border-style: solid;
+		border-color: black;
+		font-family: 'Pragmatica', arial;
+        border-radius: 50px;
+        padding-left: 1%;
+        outline: none;
+        border-width: 1px;
+        -webkit-border-radius: 100px;
+    }
+
+</style>
+{% endblock %}
+
+{% block body %}
+
+
+<div class = pagetitle> Game Schedule </div>
+
+
+<form method = GET id = team_form>
+    <center>
+    <select class = identifier name = team_selection id="team_selection">
+        <option class = identifier value = "all"> </option>
+        <option class = identifier value = "all"> All Games </option>
+        {% for team in teams %}
+            <option class = identifier value = "{{team}}"> {{team}} </option>
+        {% endfor %}
+    </select>
+    </center>
+</form>
+
+
+    <div class = context>
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Visitor</th>
+                <th scope="col">Vistor Points</th>
+                <th scope="col">Home</th>
+                <th scope="col">Home Points</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for game in schedule %}
+              <tr>
+                <td> {{ game.1 }} </td>
+                <td> {{ game.2 }} </td>
+                <td> {{ game.3 }} </td>
+                <td> {{ game.4 }} </td>
+                <td> {{ game.5 }} </td>
+              </tr>
+              </a>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <script>
+            $(document).ready(function() { 
+                $("#team_selection").on('change', function() {
+                    $("#team_form").submit();
+                });
+            });
+    
+        </script>
+
+{% endblock %}

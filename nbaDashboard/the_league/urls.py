@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    path('', views.index, name="home"),
+    path('', views.index, name="index"),
     path('teams', views.get_team_info, name="team_information"),
     path('team_name', views.get_team_names, name="team_names"),
     path('team_abbreviations', views.get_team_abbreviations, name="team_abbreviations"),
@@ -14,5 +14,16 @@ urlpatterns = [
     path('view_team', views.view_team_information, name="view_team"),
     path('add', views.add_information, name="add"),
     path('add_player', views.add_player, name="add_player"),
-
+    path('base_template', views.base_template, name = 'base_template'),
+    path('team_dashboard', views.team_dashboard, name = 'team_dashboard'),
+    path('player_dashboard', views.player_dashboard, name = 'player_dashboard'),
+    path('team/<str:team_abbr>', views.team, name = 'team'),
+    path('player/<int:player_id>', views.player, name ='player'),
+    path('game_schedule', views.game_schedule, name = 'game_schedule'),
+    path('login', views.login, name = 'login'),
+    path('logout', views.logout, name = 'logout'),
+    path('admin_dashboard', views.admin_dashboard, name = 'admin_dashboard'),
+    path('tables/<str:table_name>', views.tables, name = 'tables'),
+    path('remove_player', views.remove_player, name='remove_player'),
+    path('export_roster', views.export_roster, name = 'export_roster')
 ]

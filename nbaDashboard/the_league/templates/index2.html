@@ -1,0 +1,117 @@
+{% extends 'base_template.html' %}
+
+{% block head %}
+<style>
+    .pagetitle {
+        margin: auto;
+        text-align: center;
+        font-size: 35px;
+        font-family: "Pragmatica", arial;
+        color: black;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+
+    .button_height{
+        height: 150px;
+        margin: 20px;
+        color: white;
+        border-color: black;
+        background-color: #FE7E03;
+        opacity: .95;
+    }
+
+    .button_height :hover {
+        border-color:black;
+        border-style: solid;
+    }
+    .container-center{
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100%;
+        transform: translate(-50%, -50%);
+    }
+    .spacer{
+        margin: 100px;
+    }
+
+
+</style>
+{% endblock %}
+
+{% block body %}
+<div class = spacer></div>
+<div class ="container container-centered">
+    <div class = row>
+        <div class = col-1></div>
+        <div class = col-5>
+            <a href="{% url 'team_dashboard' %}" style="text-decoration: none">
+                <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">By Team</button>
+            </a>
+        </div>
+        <div class = col-5>
+                <a href="{% url 'player_dashboard' %}" style="text-decoration: none">
+                    <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">By Player</button>
+                </a>
+            </div>
+        <div class = col-1></div>
+    </div>
+    {% if user_type != 'admin' %}
+    <div class = row>
+        <div class = col-1></div>
+        <div class = col-10>
+            <a href="{% url 'game_schedule' %}" style="text-decoration: none">
+                <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Game Schedule</button>
+            </a>
+        </div>
+        <div class = col-1></div>
+    </div>
+    {% else %}
+    <div class = row>
+            <div class = col-1></div>
+            <div class = col-5>
+                <a href="{% url 'game_schedule' %}" style="text-decoration: none">
+                    <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Game Schedule</button>
+                </a>
+            </div>
+            <div class = col-5>
+                    <a href="{% url 'admin_dashboard' %}" style="text-decoration: none">
+                        <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Admin Dashboard</button>
+                    </a>
+                </div>
+            <div class = col-1></div>
+        </div>
+    {% endif %}
+    <!-- <div class = row>
+        <div class = col-4>
+            <a href="{% url 'team_names' %}" style="text-decoration: none">
+                <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Team Names</button>
+            </a>
+        </div>
+        <div class = col-4>
+            <a href="{% url 'team_information' %}" style="text-decoration: none">
+                <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Team Information</button>
+            </a>
+        </div>
+        <div class = col-4>
+            <a href="{% url 'team_abbreviations' %}" style="text-decoration: none">
+                <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Team Abbreviations</button>
+            </a>
+        </div>
+    </div>
+    <div class = row>
+        <div class = col-6>
+            <a href="{% url 'team_locations' %}" style="text-decoration: none">
+            <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Team Locations</button>
+            </a>
+        </div>
+        <div class = col-6>
+            <a href="{% url 'add' %}" style="text-decoration: none">
+            <button type="button" class="btn btn-outline-primary btn-lg btn-block button_height">Add Information</button>
+            </a>
+        </div>
+    </div> -->
+</div>
+
+{% endblock %}
