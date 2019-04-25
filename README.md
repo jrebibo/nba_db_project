@@ -1,6 +1,9 @@
 # nba_db_project
 
 CS 4750 - Semester Project Information
+
+Final Commit -- 04/25/2019 :: 4:10pm
+
 Description:
 During the course of the semester, you will be expected to complete a project involving
 the creation of a database-related system. You will be provided a MySQL database
